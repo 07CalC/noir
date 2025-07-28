@@ -1,6 +1,6 @@
 # Noir
 
-Noir is an open-source, GitHub-powered markdown based note-taking app for Android. It’s designed for developers and writers who prefer editing notes locally (in your fav text editor) and syncing them with GitHub — making GitHub the single source of truth.
+Noir is an open-source, GitHub-powered markdown based note-taking app for Android. It’s designed for developers and writers who prefer editing notes locally (in your fav text editor) and syncing them with GitHub - making GitHub the single source of truth.
 
 ## 🚀 Project Vision
 

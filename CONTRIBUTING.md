@@ -42,6 +42,29 @@ feat: add markdown preview screen
 fix: resolve crash on opening note
 ```
 
+### File Naming
+
+Make sure to use kebab-case for file names, e.g., `my-component.tsx`.
+
+### Add your name to the contributors list
+
+If you want to be listed as a contributor, add your details to `lib/contributors.ts`:
+
+```ts
+export const contributors = [
+  // .. existing contributors
+  {
+    name: "Your Name",
+    github: "your-github-profile-link",
+    twitter: "your-twitter-profile-link", // optional
+    website: "your-website-link", // optional
+    linkedin: "your-linkedin-profile-link", // optional
+    }
+]
+```
+
+We'll be showcasing conrtibutors on the app, so please ensure your details are accurate and up-to-date.
+
 ## Pull Requests
 
 - Fork the repo and create your branch from `main`

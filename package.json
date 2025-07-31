@@ -21,6 +21,7 @@
     "expo": "^53.0.20",
     "expo-dev-client": "~5.2.4",
     "expo-dev-launcher": "^5.0.17",
+    "expo-file-system": "^18.1.11",
     "expo-status-bar": "~2.2.3",
     "nativewind": "latest",
     "react": "19.0.0",

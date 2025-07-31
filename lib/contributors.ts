@@ -1,4 +1,3 @@
-
 type Contributor = {
   name: string;
   github: string;
@@ -9,9 +8,9 @@ type Contributor = {
 
 export const CONTRIBUTORS: Contributor[] = [
   {
-    name: "CalC",
-    github: "https://github.com/07calc",
-    twitter: "https://x.com/not_calc",
-    website: "https://vinm.me",
-  }
-]
+    name: 'CalC',
+    github: 'https://github.com/07calc',
+    twitter: 'https://x.com/not_calc',
+    website: 'https://vinm.me',
+  },
+];

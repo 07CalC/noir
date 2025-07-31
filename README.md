@@ -54,3 +54,9 @@ We welcome all contributions! Whether it's fixing bugs, building features, impro
 
 ## 📄 License
 MIT License. See [LICENSE](https://github.com/07CalC/noir/blob/main/LICENSE) for details.
+
+## Contributors
+
+<a href="https://github.com/07calc/noir/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=07calc/noir" />
+</a>

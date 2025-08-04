@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, useColorScheme, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import App from 'utils/github-auth';
 
 export default function OnboardingScreen() {
   const colorScheme = useColorScheme();
@@ -44,7 +43,6 @@ export default function OnboardingScreen() {
 
           <Text className="text-lg font-semibold text-[#f3a49d]">Sign in with GitHub</Text>
         </TouchableOpacity>
-        <App />
       </View>
     </View>
   );

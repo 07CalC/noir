@@ -17,11 +17,12 @@
         }
       ]
     ],
+    "schema": "noir",
     "orientation": "portrait",
     "icon": "./assets/adaptive-icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/adaptive-icon.png",
       "resizeMode": "contain"
     },
     "assetBundlePatterns": ["**/*"],
@@ -34,11 +35,6 @@
         "foregroundImage": "./assets/adaptive-icon.png"
       },
       "package": "com.calc.noir"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "e42455df-4378-42c5-aaf6-0f22209cb8b8"
-      }
     }
   }
 }

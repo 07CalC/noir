@@ -15,20 +15,38 @@ export class GitHubApiService {
    * @returns Promise containing user data
    */
   async getCurrentUser(): Promise<GitHubUser> {
-    const response = await fetch(`${CONFIG.GITHUB_API.BASE_URL}${CONFIG.GITHUB_API.USER_ENDPOINT}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        Accept: 'application/vnd.github.v3+json',
-        'User-Agent': CONFIG.APP.NAME,
-      },
-    });
+    try {
+      console.log('🌐 Making request to GitHub API...');
+      console.log('🔗 URL:', `${CONFIG.GITHUB_API.BASE_URL}${CONFIG.GITHUB_API.USER_ENDPOINT}`);
+      
+      const response = await fetch(`${CONFIG.GITHUB_API.BASE_URL}${CONFIG.GITHUB_API.USER_ENDPOINT}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+          Accept: 'application/vnd.github.v3+json',
+          'User-Agent': CONFIG.APP.NAME,
+        },
+      });
 
-    if (!response.ok) {
-      throw new GitHubApiError(`Failed to fetch user data: ${response.status} ${response.statusText}`);
+      console.log(' Response status:', response.status);
+      console.log(' Response ok:', response.ok);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(' GitHub API Error:', errorText);
+        throw new GitHubApiError(`Failed to fetch user data: ${response.status} ${response.statusText}`);
+      }
+
+      const userData = await response.json();
+      console.log(' User data received successfully');
+      return userData;
+    } catch (error) {
+      console.error('🚨 Network/API Error:', error);
+      if (error instanceof TypeError && error.message.includes('Network request failed')) {
+        throw new GitHubApiError('Network connectivity issue. Please check your internet connection.');
+      }
+      throw error;
     }
-
-    return response.json();
   }
 
   /**

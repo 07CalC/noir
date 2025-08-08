@@ -6,8 +6,8 @@
 export const CONFIG = {
   // GitHub OAuth Configuration
   GITHUB: {
-    CLIENT_ID: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID || '', // Loaded from .env file
-    CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET || '', // Loaded from .env file (server-side only)
+    CLIENT_ID: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID || '', 
+    CLIENT_SECRET: process.env.EXPO_PUBLIC_GITHUB_CLIENT_SECRET || '', 
     SCOPES: ['repo', 'user'], 
   },
 

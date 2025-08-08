@@ -14,7 +14,7 @@ export class GitHubAuthService {
    */
   static async signIn(): Promise<AuthenticationResult> {
     try {
-      // Create OAuth request
+      // Create OAuth request with PKCE
       const request = new AuthSession.AuthRequest({
         clientId: CONFIG.GITHUB.CLIENT_ID,
         scopes: [...CONFIG.GITHUB.SCOPES], // Convert readonly array to mutable array
@@ -22,9 +22,8 @@ export class GitHubAuthService {
           scheme: CONFIG.APP.SCHEME,
         }),
         responseType: AuthSession.ResponseType.Code,
-        extraParams: {
-          
-        },
+        usePKCE: true, // Enable PKCE for security
+        extraParams: {},
       });
 
       console.log('Redirect URI:', request.redirectUri);
@@ -36,7 +35,12 @@ export class GitHubAuthService {
       if (result.type === 'success') {
         console.log(' OAuth authorization successful');
         
-        // Exchange authorization code for access token
+        // Ensure we have a code verifier for PKCE
+        if (!request.codeVerifier) {
+          throw new AuthenticationError('PKCE code verifier is missing');
+        }
+        
+        // Exchange authorization code for access token with PKCE
         const tokenResponse = await AuthSession.exchangeCodeAsync(
           {
             clientId: CONFIG.GITHUB.CLIENT_ID,
@@ -45,6 +49,9 @@ export class GitHubAuthService {
             redirectUri: AuthSession.makeRedirectUri({
               scheme: CONFIG.APP.SCHEME,
             }),
+            extraParams: {
+              code_verifier: request.codeVerifier, // Include PKCE code verifier
+            },
           },
           GITHUB_OAUTH_DISCOVERY
         );
@@ -52,26 +59,45 @@ export class GitHubAuthService {
         if (tokenResponse.accessToken) {
           console.log(' Access token obtained successfully');
           
-          // Fetch user information
-          const apiService = new GitHubApiService(tokenResponse.accessToken);
-          const userData = await apiService.getCurrentUser();
+          // Test network connectivity first
+          console.log('🔍 Testing network connectivity...');
+          
+          try {
+            // Fetch user information
+            const apiService = new GitHubApiService(tokenResponse.accessToken);
+            const userData = await apiService.getCurrentUser();
 
-          // Store credentials securely
-          await SecureStorageService.storeAccessToken(tokenResponse.accessToken);
-          await SecureStorageService.storeUserData(userData);
+            // Store credentials securely
+            await SecureStorageService.storeAccessToken(tokenResponse.accessToken);
+            await SecureStorageService.storeUserData(userData);
 
-          console.log(' User data:', {
-            login: userData.login,
-            name: userData.name,
-            avatar_url: userData.avatar_url,
-          });
-          console.log(' Access token stored securely');
+            console.log(' User data:', {
+              login: userData.login,
+              name: userData.name,
+              avatar_url: userData.avatar_url,
+            });
+            console.log(' Access token stored securely');
 
-          return {
-            success: true,
-            user: userData,
-            accessToken: tokenResponse.accessToken,
-          };
+            return {
+              success: true,
+              user: userData,
+              accessToken: tokenResponse.accessToken,
+            };
+          } catch (apiError) {
+            console.error('❌ Failed to fetch user data:', apiError);
+            
+            const errorMessage = apiError instanceof Error ? apiError.message : 'Unknown error occurred';
+            
+            // Store token anyway, try to fetch user data later
+            await SecureStorageService.storeAccessToken(tokenResponse.accessToken);
+            
+            return {
+              success: false,
+              error: `Failed to fetch user information: ${errorMessage}`,
+              errorType: 'API_ERROR',
+              accessToken: tokenResponse.accessToken,
+            };
+          }
         } else {
           throw new AuthenticationError('No access token received from GitHub');
         }
@@ -91,7 +117,7 @@ export class GitHubAuthService {
         };
       }
     } catch (error) {
-      console.error('💥 GitHub authentication error:', error);
+      console.error('GitHub authentication error:', error);
       
       let errorMessage = 'An unexpected error occurred during authentication';
       let errorType: AuthErrorType = 'UNKNOWN_ERROR';
@@ -206,7 +232,7 @@ export class GitHubAuthService {
         ]
       );
     } else {
-      const title = result.errorType === 'USER_CANCELLED' ? 'Login Cancelled' : '❌ Login Failed';
+      const title = result.errorType === 'USER_CANCELLED' ? 'Login Cancelled' : ' Login Failed';
       const message = result.error || 'Please try again';
       
       Alert.alert(title, message, [{ text: 'OK', style: 'default' }]);

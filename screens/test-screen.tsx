@@ -43,7 +43,7 @@ export default function TestScreen() {
     if (result.success) {
       setUser(null);
       setAccessToken(null);
-      console.log('✅ User signed out successfully');
+      console.log(' User signed out successfully');
     }
   };
 
@@ -77,7 +77,7 @@ export default function TestScreen() {
             {/* User Info */}
             <View className="mb-6 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
               <Text className="mb-2 text-lg font-semibold text-green-600 dark:text-green-400">
-                ✅ Authentication Successful!
+                 Authentication Successful!
               </Text>
               
               <View className="space-y-2">

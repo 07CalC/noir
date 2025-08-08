@@ -13,4 +13,8 @@ export const CONTRIBUTORS: Contributor[] = [
     twitter: 'https://x.com/not_calc',
     website: 'https://vinm.me',
   },
+  {
+    name: 'debasmitaas',
+    github: 'https://github.com/debasmitaas',
+  },
 ];

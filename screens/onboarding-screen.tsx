@@ -1,11 +1,34 @@
 import { View, Text, TouchableOpacity, useColorScheme, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { GitHubAuthService } from '../lib/github-auth';
 
 export default function OnboardingScreen() {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const navigation = useNavigation<any>();
+
+  /**
+   * Handle GitHub OAuth login
+   */
+  const handleGitHubLogin = async (): Promise<void> => {
+    try {
+      console.log(' Initiating GitHub login...');
+      
+      const result = await GitHubAuthService.signIn();
+      
+      // Show result alert and handle navigation
+      GitHubAuthService.showAuthResultAlert(result, (user) => {
+        console.log(` Successfully logged in as: ${user.login}`);
+        // Navigate to main app screen after successful login
+        navigation.navigate('test');
+      });
+      
+    } catch (error) {
+      console.error(' Unexpected error during GitHub login:', error);
+      
+    }
+  };
 
   return (
     <View
@@ -38,7 +61,7 @@ export default function OnboardingScreen() {
 
         <TouchableOpacity
           className="flex flex-row items-center justify-center gap-x-5 rounded-lg border-2 border-[#f3a49d] px-6 py-4"
-          onPress={() => navigation.navigate('login')}>
+          onPress={handleGitHubLogin}>
           <Ionicons name="logo-github" size={24} color={ACCENT_COLOR} />
 
           <Text className="text-lg font-semibold text-[#f3a49d]">Sign in with GitHub</Text>
